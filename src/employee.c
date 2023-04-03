@@ -60,7 +60,11 @@ void removeEmployee(employee_list_t **head_employee_list, const char *employee_n
 
   /* check middle */
   while(p->next && p->next->next) {
-    if(strcmp(p->name,employee_name) == 0){
+    if(strcmp(p->next->name,employee_name) == 0){
+      employee_list_t *temp = p->next;
+      p->next = temp->next;
+      free(temp);
+      return;
     } 
     p=p->next;
   }
@@ -75,12 +79,17 @@ void removeEmployee(employee_list_t **head_employee_list, const char *employee_n
   return;
 }
 
-// void freeEmployeeNode(employee_list_t *employee_node) {
-//   free(employee_node->employee);
-//   employee_node->employee = NULL;
-//   free(employee_node);
-//   employee_node = NULL;
-// }
+double findEmployee(employee_list_t *head_employee_list, const char *name) {
+  employee_list_t *p = head_employee_list;
+  while(p) {
+    if(strcpy(p->name, name) == 0) {
+      return p->salary;
+    }
+    p = p->next;
+  }
+  return (int)0;
+}
+
 
 void freeAllMemory(employee_list_t **head_employee_list) {
   employee_list_t *p = *head_employee_list;
