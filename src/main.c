@@ -12,8 +12,8 @@ int main()
 		addEmployee(&head_employee_list);
 	}
 	showAllEmployee(head_employee_list);
-  removeEmployee(&head_employee_list,"Nguyen Hoang");
-  showAllEmployee(head_employee_list);
-	freeAllMemory(head_employee_list);
+  // removeEmployee(&head_employee_list,"Nguyen Hoang");
+ //  showAllEmployee(head_employee_list);
+	// freeAllMemory(head_employee_list);
 	return 0;
 }

@@ -1,4 +1,4 @@
-#include "../include/employee_list.h"
+#include "../include/employee.h"
 #include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -6,23 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void CLEAR_STDIN_BUFFER() {
-  int c;
-  while ((c = getc(stdin)) != '\n' && c != EOF)
-    ;
-}
-
-bool isDigitOnly(const char *buffer) {
-  int i = 0;
-  while (buffer[i] != '\0') {
-    if (!isdigit(buffer[i])) {
-      printf("Incorrect salary!\n");
-      return false;
-    }
-    ++i;
-  }
-  return true;
-}
 
 employee_list_t *createEmployeeNode() {
   employee_list_t *new_employee_node =
@@ -39,7 +22,7 @@ char *getEmployeeName() {
   char *name = (char *)malloc(64);
   printf("Enter employee name: ");
   CLEAR_STDIN_BUFFER();
-  fgets(name, 64, stdin);
+  fgets(name, sizeof(name), stdin);
   name[strlen(name) - 1] = '\0';
   return name;
 }
@@ -48,7 +31,7 @@ double getEmployeeSalary() {
   char *salary_str = (char *)malloc(1024);
   do {
     printf("Enter employee salary: ");
-    fgets(salary_str, 1024, stdin);
+    fgets(salary_str, sizeof(salary_str), stdin);
     salary_str[strlen(salary_str) - 1] = '\0';
   } while (!isDigitOnly(salary_str));
   double salary = strtod(salary_str, NULL);
@@ -58,8 +41,14 @@ double getEmployeeSalary() {
 
 void addEmployee(employee_list_t **head_employee_list) {
   employee_list_t *new_employee = createEmployeeNode();
-  new_employee->Next = *head_employee_list;
-  *head_employee_list = new_employee;
+  if (!(*head_employee_list)) {
+    *head_employee_list = new_employee;
+  }
+  employee_list_t *p = *head_employee_list;
+  while (p->Next) {
+    p = p->Next;
+  }
+  p->Next = new_employee;
   return;
 }
 
@@ -83,15 +72,16 @@ void showAllEmployee(employee_list_t *head_employee_list) {
   }
 }
 
-void removeEmployee(employee_list_t **head_employee_list, const char *employee_name) {
+void removeEmployee(employee_list_t **head_employee_list,
+                    const char *employee_name) {
   employee_list_t *p = *head_employee_list;
-  while(p) {
-    if(strcmp(p->Next->employee->name, employee_name) == 0){
+  while (p) {
+    if (strcmp(p->Next->employee->name, employee_name) == 0) {
       break;
     }
     p = p->Next;
   }
-  if(p == NULL){
+  if (p == NULL) {
     printf("Employee name incorrect!\n");
     return;
   }
