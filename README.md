@@ -8,8 +8,8 @@ Contact: fb.com/nguyenluongdinhhoang
 Make sure you are runnning cmake version > 3.0
 
 ```
-mkdir build && cd build\
-cmake ..\
-make\
+mkdir build && cd build
+cmake ..
+make
 ./test
 ```
