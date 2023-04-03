@@ -13,3 +13,19 @@ cmake ..
 make
 ./test
 ```
+
+# Read data from file
+
+Accept reading from this format only\
+```
+fullname:salary
+'''
+Read sample on data_test.txt\
+Run with file name argument\
+```
+./test ${FILE_NAME}
+```
+Example
+```
+./test ../data_test.txt
+```
