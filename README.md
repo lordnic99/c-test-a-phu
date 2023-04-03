@@ -16,11 +16,10 @@ make
 
 # Read data from file
 
-Accept reading from this format only
+Accept reading from this format only, read sample on data_test.txt
 ```
 fullname:salary
 ```
-Read sample on data_test.txt\
 Run with file name argument
 ```
 ./test ${FILE_NAME}
