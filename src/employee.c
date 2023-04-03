@@ -1,108 +1,92 @@
 #include "../include/employee.h"
-#include <ctype.h>
-#include <limits.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-
-employee_list_t *createEmployeeNode() {
-  employee_list_t *new_employee_node =
-      (employee_list_t *)malloc(sizeof(*new_employee_node));
-  new_employee_node->Next = NULL;
-  new_employee_node->employee =
-      (employee_t *)malloc(sizeof(*(new_employee_node->employee)));
-  strcpy(new_employee_node->employee->name, getEmployeeName());
-  new_employee_node->employee->salary = getEmployeeSalary();
-  return new_employee_node;
+static employee_list_t *createEmployeeNode() {
+  employee_list_t *new_employee = (employee_list_t *)malloc(sizeof(*new_employee));
+  return new_employee;
 }
 
-char *getEmployeeName() {
-  char *name = (char *)malloc(64);
-  printf("Enter employee name: ");
-  CLEAR_STDIN_BUFFER();
-  fgets(name, sizeof(name), stdin);
-  name[strlen(name) - 1] = '\0';
-  return name;
-}
-
-double getEmployeeSalary() {
-  char *salary_str = (char *)malloc(1024);
-  do {
-    printf("Enter employee salary: ");
-    fgets(salary_str, sizeof(salary_str), stdin);
-    salary_str[strlen(salary_str) - 1] = '\0';
-  } while (!isDigitOnly(salary_str));
-  double salary = strtod(salary_str, NULL);
-  free(salary_str);
-  return salary;
-}
-
-void addEmployee(employee_list_t **head_employee_list) {
+void addEmployee(employee_list_t **head_employee_list, const char* name, double salary) {
   employee_list_t *new_employee = createEmployeeNode();
+  strcpy(new_employee->name,name);
+  new_employee->salary = salary;
+  new_employee->next = NULL;
   if (!(*head_employee_list)) {
     *head_employee_list = new_employee;
+    return;
   }
   employee_list_t *p = *head_employee_list;
-  while (p->Next) {
-    p = p->Next;
+  while (p && p->next) {
+    p = p->next;
   }
-  p->Next = new_employee;
+  p->next = new_employee;
   return;
 }
 
 void showAllEmployee(employee_list_t *head_employee_list) {
-  employee_list_t *pHead = head_employee_list;
+  employee_list_t *p = head_employee_list;
   size_t i = 1;
-  if (pHead == NULL) {
+  if (p == NULL) {
     printf("Employee list was empty!");
     return;
   } else {
     printf("NO.\tNAME\t\t\t\tSALARY\n");
     printf("-----------------------------------------------------------\n");
-    while (pHead) {
+    while (p) {
       printf("%-8lu", i);
-      printf("%-32s", pHead->employee->name);
-      printf("%-16f\n", pHead->employee->salary);
+      printf("%-32s", p->name);
+      printf("%-16f\n", p->salary);
       printf("-----------------------------------------------------------\n");
       ++i;
-      pHead = pHead->Next;
+      p = p->next;
     }
   }
 }
 
-void removeEmployee(employee_list_t **head_employee_list,
-                    const char *employee_name) {
+void removeEmployee(employee_list_t **head_employee_list, const char *employee_name) {
   employee_list_t *p = *head_employee_list;
-  while (p) {
-    if (strcmp(p->Next->employee->name, employee_name) == 0) {
-      break;
-    }
-    p = p->Next;
-  }
-  if (p == NULL) {
-    printf("Employee name incorrect!\n");
+  if(!p) {
+    printf("Empty!");
     return;
   }
-  employee_list_t *employee_to_remove = p->Next;
-  free(employee_to_remove);
-  p->Next = p->Next->Next;
+  /* check head */
+  if(strcmp((*head_employee_list)->name, employee_name) == 0) {
+    (*head_employee_list) = (*head_employee_list)->next;
+    free(p);
+    return;
+  }
+
+  /* check middle */
+  while(p->next && p->next->next) {
+    if(strcmp(p->name,employee_name) == 0){
+    } 
+    p=p->next;
+  }
+
+  /* Check end */
+  if(strcmp(p->next->name, employee_name) == 0) {
+    free(p->next);
+    p->next = NULL;
+    return;
+  } 
+  printf("Not found! Please try again!");
   return;
 }
 
-void freeEmployeeNode(employee_list_t *employee_node) {
-  free(employee_node->employee);
-  employee_node->employee = NULL;
-  free(employee_node);
-  employee_node = NULL;
-}
+// void freeEmployeeNode(employee_list_t *employee_node) {
+//   free(employee_node->employee);
+//   employee_node->employee = NULL;
+//   free(employee_node);
+//   employee_node = NULL;
+// }
 
-void freeAllMemory(employee_list_t *head_employee_list) {
-  employee_list_t *p = head_employee_list;
-  while (head_employee_list) {
-    head_employee_list = head_employee_list->Next;
-    freeEmployeeNode(p);
-    p = head_employee_list;
+void freeAllMemory(employee_list_t **head_employee_list) {
+  employee_list_t *p = *head_employee_list;
+  while (*head_employee_list) {
+    *head_employee_list = (*head_employee_list)->next;
+    free(p);
+    p = *head_employee_list;
   }
 }
