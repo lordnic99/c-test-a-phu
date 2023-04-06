@@ -5,7 +5,7 @@ Contact: fb.com/nguyenluongdinhhoang
 
 # How to build
 
-Make sure you are runnning cmake version > 3.0
+Make sure you are runnning cmake version >= 2.8
 
 ```
 mkdir build && cd build
@@ -50,7 +50,7 @@ void bbb_wdt_enable(void)
   2. Poll for posted write to complete using WDT_WWPS.W_PEND_WSPR.
   3. Write XXXX 4444h in WDT_WSPR.
   4. Poll for posted write to complete using WDT_WWPS.W_PEND_WSPR */
-  *wdt_en_res = 0x00005555;
+  *wdt_en_res = 0x0000BBBB;
   while((*wdt_status_res)&(1UL << 4));
   *wdt_en_res = 0x00004444;
   while((*wdt_status_res)&(1UL << 4));
